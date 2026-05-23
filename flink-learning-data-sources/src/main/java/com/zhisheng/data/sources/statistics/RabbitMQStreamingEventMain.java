@@ -46,7 +46,7 @@ public class RabbitMQStreamingEventMain {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         // 按系统到达时间每分钟统计，无需事件时间与 Watermark
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
-        env.setParallelism(4);
+        env.setParallelism(2);
         env.enableCheckpointing(60_000L);
 
         RMQConnectionConfig connectionConfig = buildRabbitMQConfig(config);
