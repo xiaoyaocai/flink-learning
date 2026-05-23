@@ -26,6 +26,11 @@ public class DemoConfig implements Serializable {
         private String username;
         private String password;
         private String queue;
+        /**
+         * 是否要求消息带 correlationId（用于 exactly-once）。
+         * 普通生产者未设置该字段时必须为 false。
+         */
+        private boolean usesCorrelationId = false;
     }
 
     @Data

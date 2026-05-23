@@ -5,11 +5,12 @@
     "virtualHost": "/",
     "username": "admin",
     "password": "0GM1aol4z8GeSZY99",
-    "queue": "fbm_order_shipped"
+    "queue": "fbm_order_shipped",
+    "usesCorrelationId": false
   },
   "mysql": {
-    "driver": "com.mysql.jdbc.Driver",
-    "url": "jdbc:mysql://192.168.184.130:3306/trino?useUnicode=true&characterEncoding=UTF-8",
+    "driver": "com.mysql.cj.jdbc.Driver",
+    "url": "jdbc:mysql://192.168.184.130:3306/trino?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true",
     "username": "root",
     "password": "root"
   },

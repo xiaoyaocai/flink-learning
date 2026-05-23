@@ -47,9 +47,13 @@ public class SalesStatMySQLSink extends RichSinkFunction<List<SalesStat>> implem
                 mysqlConfig.getUrl(),
                 mysqlConfig.getUsername(),
                 mysqlConfig.getPassword());
-        if (connection != null) {
-            preparedStatement = connection.prepareStatement(UPSERT_SQL);
+        if (connection == null) {
+            throw new IllegalStateException(
+                    "无法连接 MySQL，请检查 demo.json 中 mysql 配置：服务是否启动、地址/端口/库名/账号密码是否正确，"
+                            + "并确认已执行 sales_stat.sql 创建 trino 库与 sales_stat 表。url="
+                            + mysqlConfig.getUrl());
         }
+        preparedStatement = connection.prepareStatement(UPSERT_SQL);
     }
 
     @Override

@@ -47,11 +47,13 @@ public class RabbitMQStreamingEventMain {
 
         RMQConnectionConfig connectionConfig = buildRabbitMQConfig(config);
 
+        // 第三个参数为 usesCorrelationId：发送端未设置 correlationId 时必须为 false
+        boolean usesCorrelationId = config.getRabbitmq().isUsesCorrelationId();
         DataStream<String> orderStream = env
                 .addSource(new RMQSource<>(
                         connectionConfig,
                         config.getRabbitmq().getQueue(),
-                        true,
+                        usesCorrelationId,
                         new SimpleStringSchema()))
                 .setParallelism(1)
                 .name("rabbitmq-fbm-order-shipped");
