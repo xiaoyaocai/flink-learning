@@ -1,0 +1,58 @@
+{
+  "orderId": "202605230001",
+  "platform": "Amazon",
+  "orderType": "FBM",
+  "orderStatus": "CREATED",
+  "createTime": "2026-05-23T10:30:00Z",
+  "buyer": {
+    "buyerId": "B10001",
+    "name": "John Smith",
+    "email": "john.smith@example.com",
+    "phone": "+1-202-555-0136"
+  },
+  "shippingAddress": {
+    "country": "US",
+    "state": "CA",
+    "city": "Los Angeles",
+    "addressLine1": "123 Sunset Blvd",
+    "addressLine2": "Apt 5A",
+    "zipCode": "90001"
+  },
+  "items": [{
+    "sku": "SKU-001",
+    "productName": "Wireless Mouse",
+    "quantity": 2,
+    "unitPrice": 15.99,
+    "currency": "USD"
+  },
+    {
+      "sku": "SKU-002",
+      "productName": "USB Keyboard",
+      "quantity": 1,
+      "unitPrice": 29.99,
+      "currency": "USD"
+    }],
+  "payment": {
+    "paymentMethod": "CreditCard",
+    "paid": true,
+    "amount": 61.97,
+    "currency": "USD"
+  },
+  "shipping": {
+    "shippingMethod": "Standard",
+    "carrier": "UPS",
+    "trackingNumber": "1Z999AA10123456784",
+    "shippingCost": 5.99,
+    "status": "PENDING"
+  },
+  "seller": {
+    "sellerId": "S90001",
+    "warehouse": "US-WEST-01"
+  },
+  "metadata": {
+    "source": "web",
+    "priority": "normal",
+    "tags": ["fbm",
+      "international"]
+  }
+}

@@ -1,0 +1,116 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0
+    # 容器名册
+    container_name: mysql-8.0
+    environment:
+      #密码设置
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=Asia/Shanghai
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    volumes:
+      # 前面宿主机目录，后面容器内目录(宿主机没有的目录会自动创建)
+      #- ./mysql/conf:/etc/mysql/conf.d # conf.d文件准备参考我的linux安装mysql文档
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/logs:/var/log/mysql
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      # 前面宿主机目录，后面容器内目录
+      - 3306:3306
+    restart: always
+
+  redis:
+    hostname: redis
+    image: redis:8.0
+    container_name: redis
+    restart: always
+    #   command: redis-server /etc/redis.conf # 启动redis命令
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro # 设置容器时区与宿主机保持一致
+      - ./redis/data:/data
+      - ./redis/redis.conf:/etc/redis.conf
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass 123456
+    privileged: true
+
+  zoo1:
+    image: zookeeper
+    restart: always
+    container_name: zoo1
+    ports:
+      - "2181:2181"
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    restart: always
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=0GM1aol4z8GeSZY99
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data:/data/db
+    command: --wiredTigerCacheSizeGB 4 --auth # 限制内存大小, 需要认证
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+  namesrv:
+    image: apache/rocketmq:5.3.1
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    networks:
+      - rocketmq
+    command: sh mqnamesrv
+  broker:
+    image: apache/rocketmq:5.3.1
+    container_name: rmqbroker
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+    depends_on:
+      - namesrv
+    networks:
+      - rocketmq
+    command: sh mqbroker
+  dashboard:
+    image: registry.cn-hangzhou.aliyuncs.com/jeecgdocker/rocketmq-dashboard:latest
+    container_name: rmqdashboard
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876
+    depends_on:
+      - namesrv
+    mem_limit: 512m  # 增加内存限制
+    ulimits:
+      nofile:
+        soft: 65536  # 增加文件描述符限制
+        hard: 65536
+    networks:
+      - rocketmq
+
+networks:
+  rocketmq:
+    driver: bridge
