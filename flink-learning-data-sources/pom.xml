@@ -18,6 +18,11 @@
             <version>${flink.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-rabbitmq_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.zhisheng.flink</groupId>
             <artifactId>flink-learning-common</artifactId>
             <version>1.0-SNAPSHOT</version>

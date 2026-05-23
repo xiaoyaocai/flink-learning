@@ -1,0 +1,17 @@
+{
+  "rabbitmq": {
+    "host": "192.168.184.130",
+    "port": 5672,
+    "virtualHost": "/",
+    "username": "admin",
+    "password": "0GM1aol4z8GeSZY99",
+    "queue": "fbm_order_shipped"
+  },
+  "mysql": {
+    "driver": "com.mysql.jdbc.Driver",
+    "url": "jdbc:mysql://192.168.184.130:3306/trino?useUnicode=true&characterEncoding=UTF-8",
+    "username": "root",
+    "password": "root"
+  },
+  "windowMinutes": 1
+}
