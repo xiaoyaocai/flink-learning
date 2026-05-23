@@ -11,9 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.streaming.connectors.rabbitmq.RMQSource;
@@ -42,7 +44,9 @@ public class RabbitMQStreamingEventMain {
         DemoConfig config = loadConfig();
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        // 按系统到达时间每分钟统计，无需事件时间与 Watermark
+        env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
+        env.setParallelism(4);
         env.enableCheckpointing(60_000L);
 
         RMQConnectionConfig connectionConfig = buildRabbitMQConfig(config);
@@ -65,7 +69,7 @@ public class RabbitMQStreamingEventMain {
                 .name("parse-order-lines");
 
         orderLineStream
-                .timeWindowAll(Time.minutes(config.getWindowMinutes()))
+                .windowAll(TumblingProcessingTimeWindows.of(Time.minutes(config.getWindowMinutes())))
                 .apply(new SalesStatAggregator())
                 .addSink(new SalesStatMySQLSink(config.getMysql()))
                 .setParallelism(1)
