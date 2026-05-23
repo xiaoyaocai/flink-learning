@@ -2,6 +2,7 @@ package com.zhisheng.data.sources.statistics;
 
 public class RabbitMQStreamingEventMain {
     public static void main(String[] args) {
+        //开发部署环境基于 flink:1.14.6-scala_2.12-java8
         //todo Step1:Flink连接RabbitMQ  192.168.184.130 请读取 resources/docker-compose.yml 文件，里面有 RabbitMQ,MySQL,Mongodb 的账号密码等连接信息
         //todo Step2:连接RabbitMQ topic : fbm_order_shipped
         //todo Step3:接收参数：demo.json
